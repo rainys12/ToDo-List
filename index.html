@@ -47,6 +47,11 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -77,6 +82,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
 
         .logo {
@@ -86,16 +92,53 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            z-index: 1001;
         }
 
         .logo i {
             color: var(--secondary);
         }
 
+        /* Бургер меню - СКРЫТ НА ПК */
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .burger-line {
+            width: 100%;
+            height: 3px;
+            background-color: var(--dark);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .burger-menu.active .burger-line:nth-child(1) {
+            transform: translateY(9px) rotate(45deg);
+        }
+
+        .burger-menu.active .burger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-menu.active .burger-line:nth-child(3) {
+            transform: translateY(-9px) rotate(-45deg);
+        }
+
+        /* Навигационные ссылки - ВИДИМЫ НА ПК */
         .nav-links {
             display: flex;
             gap: 2rem;
             align-items: center;
+            transition: var(--transition);
         }
 
         .nav-links a {
@@ -126,10 +169,53 @@
             width: 100%;
         }
 
-        .user-section {
+        /* Профиль пользователя на ПК */
+        .desktop-user {
             display: flex;
             align-items: center;
             gap: 1rem;
+        }
+
+        /* Стили для приветствия пользователя */
+        #userGreetingDesktop, #userGreetingMobile {
+            font-weight: 600;
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Для мобильной версии немного другие стили */
+        #userGreetingMobile {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 0.5rem;
+            padding: 0.8rem;
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        /* На десктопе - выравнивание по центру вертикально */
+        .desktop-user > span {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* Адаптивность для приветствия */
+        @media (max-width: 768px) {
+            #userGreetingDesktop, #userGreetingMobile {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
+            }
         }
 
         .btn {
@@ -220,10 +306,13 @@
             line-height: 1.6;
         }
 
-        /* Центрированная кнопка на главной */
-        .hero .user-section {
+        /* Стили для кнопок на главной */
+        .hero-buttons {
+            display: flex;
+            align-items: center;
             justify-content: center;
             margin-top: 2rem;
+            gap: 1rem;
         }
 
         /* Страница входа/регистрации */
@@ -704,9 +793,80 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Адаптивность */
-        /* Планшеты (768px - 1024px) */
+        /* =============================== */
+        /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+        /* =============================== */
+
+        /* Планшеты и телефоны (≤ 1024px) */
         @media (max-width: 1024px) {
+            /* Показываем бургер-меню */
+            .burger-menu {
+                display: flex;
+            }
+
+            /* Скрываем обычную навигацию */
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                max-width: 400px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                padding: 100px 2rem 2rem;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow-y: auto;
+                z-index: 1000;
+                gap: 0;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 1rem;
+                border-bottom: 1px solid var(--gray-light);
+                font-size: 1.1rem;
+                display: block;
+            }
+
+            .nav-links a::after {
+                display: none;
+            }
+
+            .nav-links a:hover {
+                background: var(--light);
+                border-radius: 8px;
+            }
+
+            /* Скрываем профиль на ПК в мобильной версии */
+            .desktop-user {
+                display: none !important;
+            }
+
+            /* Показываем профиль в мобильном меню */
+            .nav-links .mobile-user {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                gap: 1rem;
+                margin-top: 2rem;
+                padding-top: 2rem;
+                border-top: 1px solid var(--gray-light);
+            }
+
+            /* Кнопки в мобильном меню */
+            .nav-links .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
             .container {
                 padding: 1.5rem;
                 margin-top: 70px;
@@ -714,6 +874,18 @@
             
             .hero h1 {
                 font-size: 2.8rem;
+            }
+            
+            /* Кнопка на главной на мобильных */
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .hero-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
             }
             
             .about-content, .benefits-content {
@@ -748,20 +920,14 @@
         /* Большие телефоны (576px - 768px) */
         @media (max-width: 768px) {
             .nav-container {
-                flex-direction: column;
-                gap: 1rem;
+                flex-direction: row;
+                gap: 0;
                 padding: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
             }
 
             .container {
                 padding: 1rem;
-                margin-top: 120px;
+                margin-top: 70px;
             }
 
             .hero h1 {
@@ -812,22 +978,11 @@
         /* Малые телефоны (до 576px) */
         @media (max-width: 576px) {
             .nav-links {
-                flex-direction: column;
-                gap: 0.5rem;
-                align-items: center;
-                width: 100%;
+                max-width: 100%;
             }
             
-            .nav-links a {
-                width: 100%;
-                text-align: center;
-                padding: 0.5rem;
-            }
-            
-            .user-section {
-                flex-direction: column;
-                gap: 0.5rem;
-                width: 100%;
+            .logo {
+                font-size: 1.5rem;
             }
             
             .hero {
@@ -934,6 +1089,49 @@
             .todo-container {
                 padding: 1rem;
             }
+            
+            .nav-links {
+                padding-top: 80px;
+                overflow-y: auto;
+            }
+        }
+
+        /* Исправления для профиля пользователя */
+        .mobile-user {
+            display: none;
+        }
+
+        /* На ПК показываем профиль в хедере */
+        @media (min-width: 1025px) {
+            .desktop-user {
+                display: flex !important;
+            }
+        }
+        
+        /* Кнопки входа/регистрации */
+        .auth-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .login-btn {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .login-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .register-btn {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .register-btn:hover {
+            background: var(--primary-light);
         }
     </style>
 </head>
@@ -945,17 +1143,58 @@
                 <i class="fas fa-book"></i>
                 <span>ToDo List</span>
             </div>
-            <div class="nav-links">
+            
+            <!-- Бургер меню (скрыто на ПК) -->
+            <button class="burger-menu" id="burgerMenu">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+            
+            <!-- Навигационные ссылки (видны на ПК, скрыты в меню на мобильных) -->
+            <div class="nav-links" id="navLinks">
                 <a href="#" data-page="home">Главная</a>
                 <a href="#" data-page="about">О нас</a>
                 <a href="#" data-page="benefits">Преимущества</a>
                 <a href="#" data-page="todo">ToDo Лист</a>
-            </div>
-            <div class="user-section">
-                <span id="userGreeting"></span>
-                <button id="logoutBtn" class="btn btn-outline" style="display: none;">
-                    <i class="fas fa-sign-out-alt"></i>Выйти
-                </button>
+                
+                <!-- Кнопки входа/регистрации для мобильных -->
+                <div class="mobile-user" id="mobileAuthButtons">
+                    <button id="mobileLoginBtn" class="btn login-btn">
+                        <i class="fas fa-sign-in-alt"></i>Вход
+                    </button>
+                    <button id="mobileRegisterBtn" class="btn register-btn">
+                        <i class="fas fa-user-plus"></i>Регистрация
+                    </button>
+                </div>
+                
+                <!-- Профиль пользователя для мобильных -->
+                <div class="mobile-user" id="mobileUserProfile" style="display: none; flex-direction: column; gap: 1rem; width: 100%;">
+                    <span id="userGreetingMobile"></span>
+                    <button id="logoutBtnMobile" class="btn btn-outline" style="width: 100%;">
+                         <i class="fas fa-sign-out-alt"></i>Выйти
+                    </button>
+                </div>
+            
+                <!-- Профиль пользователя для ПК -->
+                <div class="desktop-user">
+                    <!-- Кнопки входа/регистрации для ПК -->
+                    <div class="auth-buttons" id="desktopAuthButtons">
+                        <button id="desktopLoginBtn" class="btn login-btn">
+                            <i class="fas fa-sign-in-alt"></i>Вход
+                        </button>
+                        <button id="desktopRegisterBtn" class="btn register-btn">
+                            <i class="fas fa-user-plus"></i>Регистрация
+                        </button>
+                    </div>
+    
+                <!-- Профиль пользователя для ПК -->
+                <div id="desktopUserProfile" style="display: none; align-items: center; gap: 1rem;">
+                    <span id="userGreetingDesktop"></span>
+                    <button id="logoutBtnDesktop" class="btn btn-outline">
+                        <i class="fas fa-sign-out-alt"></i>Выйти
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -996,9 +1235,12 @@
             <div class="hero">
                 <h1>ToDo List</h1>
                 <p>Сфокусируйтесь на важном. Простой и элегантный инструмент для управления вашими задачами с поддержкой аккаунтов и синхронизацией.</p>
-                <div class="user-section">
-                    <button id="showLoginBtn" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt"></i>Начать использовать
+                <div class="hero-buttons">
+                    <button id="showRegisterBtn" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>Начать бесплатно
+                    </button>
+                    <button id="showLoginFromHero" class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i>Уже есть аккаунт
                     </button>
                 </div>
             </div>
@@ -1162,9 +1404,26 @@
             const authForms = document.querySelectorAll('.auth-form');
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const showLoginBtn = document.getElementById('showLoginBtn');
-            const userGreeting = document.getElementById('userGreeting');
+            
+            // Кнопки входа/регистрации
+            const desktopLoginBtn = document.getElementById('desktopLoginBtn');
+            const desktopRegisterBtn = document.getElementById('desktopRegisterBtn');
+            const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+            const mobileRegisterBtn = document.getElementById('mobileRegisterBtn');
+            const showLoginFromHero = document.getElementById('showLoginFromHero');
+            const showRegisterBtn = document.getElementById('showRegisterBtn');
+            
+            // Элементы профиля пользователя
+            const logoutBtnMobile = document.getElementById('logoutBtnMobile');
+            const logoutBtnDesktop = document.getElementById('logoutBtnDesktop');
+            const userGreetingMobile = document.getElementById('userGreetingMobile');
+            const userGreetingDesktop = document.getElementById('userGreetingDesktop');
+            const desktopAuthButtons = document.getElementById('desktopAuthButtons');
+            const mobileAuthButtons = document.getElementById('mobileAuthButtons');
+            const desktopUserProfile = document.getElementById('desktopUserProfile');
+            const mobileUserProfile = document.getElementById('mobileUserProfile');
+            
+            // Другие элементы
             const loader = document.getElementById('loader');
             const notification = document.getElementById('notification');
             const todoInput = document.getElementById('todoInput');
@@ -1177,6 +1436,10 @@
             const completedTasksSpan = document.getElementById('completedTasks');
             const footerLinks = document.querySelectorAll('.footer-section a[data-page]');
             
+            // Бургер меню
+            const burgerMenu = document.getElementById('burgerMenu');
+            const navLinksContainer = document.getElementById('navLinks');
+            
             // Модальное окно редактирования
             const editModal = document.getElementById('editModal');
             const closeEditModal = document.getElementById('closeEditModal');
@@ -1188,6 +1451,7 @@
             let currentUser = null;
             let todos = [];
             let editingTodoId = null;
+            let isMobileMenuOpen = false;
 
             // Инициализация
             initApp();
@@ -1197,6 +1461,7 @@
                 checkAuth();
                 setupEventListeners();
                 updateStats();
+                updateUserUI(); // Инициализация правильного отображения UI
             }
 
             // Проверка авторизации
@@ -1205,11 +1470,11 @@
                 if (user) {
                     currentUser = JSON.parse(user);
                     loadUserTodos();
-                    updateUserUI();
                     showPage('todo');
                 } else {
                     showPage('home');
                 }
+                updateUserUI();
             }
 
             // Загрузка задач пользователя
@@ -1233,19 +1498,80 @@
 
             // Обновление UI пользователя
             function updateUserUI() {
+                const isMobile = window.innerWidth <= 1024;
+                
                 if (currentUser) {
-                    userGreeting.textContent = `Привет, ${currentUser.username}!`;
-                    userGreeting.style.fontWeight = '600';
-                    userGreeting.style.color = 'var(--primary)';
-                    logoutBtn.style.display = 'inline-flex';
+                    // Пользователь авторизован
+                    
+                    // Обновляем приветствия
+                    const greetingText = `Привет, ${currentUser.username}!`;
+                    userGreetingMobile.textContent = greetingText;
+                    userGreetingDesktop.textContent = greetingText;
+                    
+                    // На мобильных устройствах
+                    if (isMobile) {
+                        // Показываем мобильный профиль, скрываем мобильные кнопки входа
+                        mobileUserProfile.style.display = 'flex';
+                        mobileAuthButtons.style.display = 'none';
+                        
+                        // Скрываем десктопные элементы
+                        desktopUserProfile.style.display = 'none';
+                        desktopAuthButtons.style.display = 'none';
+                    } 
+                    // На десктопах
+                    else {
+                        // Показываем десктопный профиль, скрываем десктопные кнопки входа
+                        desktopUserProfile.style.display = 'flex';
+                        desktopAuthButtons.style.display = 'none';
+                        
+                        // Скрываем мобильные элементы (они находятся внутри меню)
+                        mobileUserProfile.style.display = 'none';
+                        mobileAuthButtons.style.display = 'none';
+                    }
                 } else {
-                    userGreeting.textContent = '';
-                    logoutBtn.style.display = 'none';
+                    // Пользователь не авторизован
+                    
+                    // Очищаем приветствия
+                    userGreetingMobile.textContent = '';
+                    userGreetingDesktop.textContent = '';
+                    
+                    // На мобильных устройствах
+                    if (isMobile) {
+                        // Показываем мобильные кнопки входа, скрываем мобильный профиль
+                        mobileAuthButtons.style.display = 'flex';
+                        mobileUserProfile.style.display = 'none';
+                        
+                        // Скрываем десктопные элементы
+                        desktopUserProfile.style.display = 'none';
+                        desktopAuthButtons.style.display = 'none';
+                    } 
+                    // На десктопах
+                    else {
+                        // Показываем десктопные кнопки входа, скрываем десктопный профиль
+                        desktopAuthButtons.style.display = 'flex';
+                        desktopUserProfile.style.display = 'none';
+                        
+                        // Скрываем мобильные элементы (они находятся внутри меню)
+                        mobileAuthButtons.style.display = 'none';
+                        mobileUserProfile.style.display = 'none';
+                    }
                 }
             }
 
             // Настройка обработчиков событий
             function setupEventListeners() {
+                // Бургер меню
+                burgerMenu.addEventListener('click', toggleMobileMenu);
+                
+                // Закрытие мобильного меню при клике на ссылку
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 1024) {
+                            closeMobileMenu();
+                        }
+                    });
+                });
+
                 // Навигация
                 navLinks.forEach(link => {
                     link.addEventListener('click', (e) => {
@@ -1276,15 +1602,42 @@
                     });
                 });
 
-                // Кнопка "Начать использовать" - ОБНОВЛЕНО
-                showLoginBtn.addEventListener('click', () => {
-                    if (currentUser) {
-                        // Если пользователь уже авторизован, переходим на страницу задач
-                        showPage('todo');
-                    } else {
-                        // Если не авторизован, показываем страницу входа
-                        showPage('auth');
+                // Кнопки входа
+                desktopLoginBtn.addEventListener('click', () => {
+                    showPage('auth');
+                    document.querySelector('[data-form="login"]').click();
+                });
+                
+                mobileLoginBtn.addEventListener('click', () => {
+                    showPage('auth');
+                    document.querySelector('[data-form="login"]').click();
+                    if (window.innerWidth <= 1024) {
+                        closeMobileMenu();
                     }
+                });
+                
+                showLoginFromHero.addEventListener('click', () => {
+                    showPage('auth');
+                    document.querySelector('[data-form="login"]').click();
+                });
+
+                // Кнопки регистрации
+                desktopRegisterBtn.addEventListener('click', () => {
+                    showPage('auth');
+                    document.querySelector('[data-form="register"]').click();
+                });
+                
+                mobileRegisterBtn.addEventListener('click', () => {
+                    showPage('auth');
+                    document.querySelector('[data-form="register"]').click();
+                    if (window.innerWidth <= 1024) {
+                        closeMobileMenu();
+                    }
+                });
+                
+                showRegisterBtn.addEventListener('click', () => {
+                    showPage('auth');
+                    document.querySelector('[data-form="register"]').click();
                 });
 
                 // Вкладки авторизации
@@ -1320,7 +1673,8 @@
                 });
 
                 // Выход из аккаунта
-                logoutBtn.addEventListener('click', logoutUser);
+                logoutBtnMobile.addEventListener('click', logoutUser);
+                logoutBtnDesktop.addEventListener('click', logoutUser);
 
                 // Добавление задачи
                 addTodoBtn.addEventListener('click', addTodo);
@@ -1357,6 +1711,50 @@
                         editModal.classList.remove('active');
                     }
                 });
+                
+                // Закрытие мобильного меню при клике вне его
+                document.addEventListener('click', (e) => {
+                    if (isMobileMenuOpen && 
+                        !navLinksContainer.contains(e.target) && 
+                        !burgerMenu.contains(e.target) &&
+                        window.innerWidth <= 1024) {
+                        closeMobileMenu();
+                    }
+                });
+                
+                // Обработчик изменения размера окна
+                window.addEventListener('resize', () => {
+                    updateUserUI();
+                    // Закрываем мобильное меню при переходе на десктоп
+                    if (window.innerWidth > 1024 && isMobileMenuOpen) {
+                        closeMobileMenu();
+                    }
+                });
+            }
+
+            // Переключение мобильного меню
+            function toggleMobileMenu() {
+                if (!isMobileMenuOpen) {
+                    openMobileMenu();
+                } else {
+                    closeMobileMenu();
+                }
+            }
+
+            // Открытие мобильного меню
+            function openMobileMenu() {
+                navLinksContainer.classList.add('active');
+                burgerMenu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                isMobileMenuOpen = true;
+            }
+
+            // Закрытие мобильного меню
+            function closeMobileMenu() {
+                navLinksContainer.classList.remove('active');
+                burgerMenu.classList.remove('active');
+                document.body.style.overflow = '';
+                isMobileMenuOpen = false;
             }
 
             // Показать страницу
@@ -1443,10 +1841,8 @@
                 showLoader(false);
                 showNotification('Регистрация успешна! Теперь вы можете войти.', 'success');
                 
-                // Переключение на форму входа
-                document.querySelector('[data-form="login"]').click();
-                document.getElementById('loginUsername').value = username;
-                document.getElementById('loginPassword').value = password;
+                // Автоматический вход после регистрации
+                loginUser(username, password);
             }
 
             // Вход пользователя
@@ -1468,6 +1864,11 @@
                     showPage('todo');
                     showLoader(false);
                     showNotification(`Добро пожаловать, ${username}!`, 'success');
+                    
+                    // Закрываем мобильное меню если открыто
+                    if (window.innerWidth <= 1024) {
+                        closeMobileMenu();
+                    }
                 } else {
                     showLoader(false);
                     showNotification('Неверное имя пользователя или пароль', 'error');
@@ -1483,6 +1884,11 @@
                 updateUserUI();
                 showPage('home');
                 showNotification('Вы успешно вышли из аккаунта', 'success');
+                
+                // Закрываем мобильное меню если открыто
+                if (window.innerWidth <= 1024) {
+                    closeMobileMenu();
+                }
             }
 
             // Добавление задачи
@@ -1726,57 +2132,6 @@
                 totalTasksSpan.textContent = `Всего задач: ${total}`;
                 completedTasksSpan.textContent = `Выполнено: ${completed}`;
             }
-
-            // Пример начальных данных (для демо)
-            if (!localStorage.getItem('users')) {
-                const demoUsers = [
-                    {
-                        username: 'demo',
-                        email: 'demo@example.com',
-                        password: btoa('demo123'),
-                        createdAt: new Date().toISOString()
-                    }
-                ];
-                localStorage.setItem('users', JSON.stringify(demoUsers));
-                
-                // Демо задачи для demo пользователя
-                const demoTodos = [
-                    {
-                        id: 1,
-                        text: 'Изучить JavaScript',
-                        completed: true,
-                        createdAt: new Date(Date.now() - 86400000).toISOString(),
-                        priority: 'high'
-                    },
-                    {
-                        id: 2,
-                        text: 'Создать ToDo приложение',
-                        completed: true,
-                        createdAt: new Date(Date.now() - 43200000).toISOString(),
-                        priority: 'high'
-                    },
-                    {
-                        id: 3,
-                        text: 'Добавить анимации',
-                        completed: false,
-                        createdAt: new Date().toISOString(),
-                        priority: 'medium'
-                    },
-                    {
-                        id: 4,
-                        text: 'Протестировать приложение',
-                        completed: false,
-                        createdAt: new Date().toISOString(),
-                        priority: 'low'
-                    }
-                ];
-                localStorage.setItem('todos_demo', JSON.stringify(demoTodos));
-            }
-            
-            // Адаптивность: обработка изменения размера окна
-            window.addEventListener('resize', () => {
-                // Можно добавить логику для изменения поведения при ресайзе
-            });
         });
     </script>
 </body>
